@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#define ARQUIVO "../src/NomeRG100M.txt"
+#define ARQUIVO "../src/NomeRG10.txt"
 #define TAM_LINHA 128
 
 typedef struct Pessoa {
@@ -12,14 +12,14 @@ typedef struct Pessoa {
 } Pessoa;
 
 Pessoa* alocaNo();
-void leArquivo(Pessoa** primeiro, Pessoa** ultimo);
+void leArquivo(Pessoa** primeiro);
 void imprimeLista(Pessoa* lista);
+void liberaNos(Pessoa** lista);
 
 int main(void) {
     clock_t inicio = clock();
     Pessoa* primeiro = NULL;
-    Pessoa* ultimo = NULL;
-    leArquivo(&primeiro, &ultimo);
+    leArquivo(&primeiro);
     imprimeLista(primeiro);
     clock_t fim = clock();
     printf("%ld", fim - inicio);
@@ -35,7 +35,8 @@ Pessoa* alocaNo() {
     return no;
 }
 
-void leArquivo(Pessoa** primeiro, Pessoa** ultimo) {
+void leArquivo(Pessoa** primeiro) {
+    Pessoa* ultimo = NULL;
     char linha[TAM_LINHA];
     int i = 0;
     Pessoa* novo;
@@ -54,11 +55,11 @@ void leArquivo(Pessoa** primeiro, Pessoa** ultimo) {
         }
         if (*primeiro == NULL) {
             *primeiro = novo;
-            *ultimo = novo;
+            ultimo = novo;
 
         } else {
-            (*ultimo)->proximo = novo;
-            *ultimo = novo;
+            ultimo->proximo = novo;
+            ultimo = novo;
         }
     }
     fclose(arquivo);
@@ -69,5 +70,14 @@ void imprimeLista(Pessoa* lista) {
     while (atual != NULL) {
         printf("Nome: %s, RG: %ld\n", atual->nome, atual->rg);
         atual = atual->proximo;
+    }
+}
+
+void liberaNos(Pessoa** lista) {
+    Pessoa* temp = NULL;
+    while ((*lista) != NULL) {
+        temp = (*lista)->proximo;
+        free(*lista);
+        (*lista) = temp;
     }
 }
