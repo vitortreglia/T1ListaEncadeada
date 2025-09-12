@@ -3,4 +3,9 @@ project(T1ListaEncadeada C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(T1ListaEncadeada main.c)
+add_executable(T1ListaEncadeada main.c
+        arquivo.c
+        estrutura.c
+        Pessoa.h
+        log.c
+)
